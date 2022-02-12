@@ -1,0 +1,21 @@
+.nested-title {
+  font-size: 20px;
+  cursor: pointer;
+  width: 100px;
+  background: lightgray;
+  margin: 5px;
+}
+
+.insert::after {
+  display: flex;
+  flex-direction: column;
+  content: " - Insert as child";
+  font-size: 15px;
+}
+
+#master-list {
+  background-color: grey;
+  width: 400px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
