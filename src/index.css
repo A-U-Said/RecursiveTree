@@ -19,3 +19,15 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
+
+@keyframes spin {
+  0% { transform: rotate(0deg); transform-origin: 60% 50%;}
+  100% {  transform: rotate(359deg);  transform-origin: 60% 50%;}
+}
+
+.loading-logo {
+  animation: spin 1.5s linear infinite;
+  height: 50px;
+  width: 50px;
+  margin: 20px;
+}

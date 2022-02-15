@@ -1,4 +1,4 @@
-export default [
+const treeData = [
     {
         name: 'Subjects',
         value: "",
@@ -53,3 +53,5 @@ export default [
         ]
     }
 ];
+
+export default treeData;
