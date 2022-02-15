@@ -8,8 +8,8 @@ import { IRootState } from '../store/store';
 type treeProps = {
     members: dragList[];
     listId?: string;
-    updateRoot?: Function;
-    onChange?: Function;
+    updateRoot?: (action: string, selectedItem: itemInMove, target: Element) => void;
+    onChange?: (message: string) => void;
 };
 
 
@@ -47,7 +47,7 @@ const Tree = ({members, listId='master-list', updateRoot, onChange} : treeProps)
         dispatch(setItemInMove({ origin: "", invalidDestinations: [], data: {name: "", value: "", children: []} }));
         dispatch(setInsertDestination(""));
     };
-    const updateRootAction: Function = updateRoot || updateRootFunction;
+    const updateRootAction: (action: string, selectedItem: itemInMove, target: Element) => void = updateRoot || updateRootFunction;
 
 
     const getListItemIndex = (target: Element): number => {
@@ -175,11 +175,11 @@ const Tree = ({members, listId='master-list', updateRoot, onChange} : treeProps)
                 if (itemInMove.invalidDestinations.includes(target.id) !== true) {
                     if (dropAction) {
                         setDropAction(false);
-                        updateRootAction("insert", itemInMove, e.target);
+                        updateRootAction("insert", itemInMove, target);
                         (openState[target.id] !== true) && setOpenState({...openState, [target.id]: true});
                         onChange && onChange(itemInMove.origin + " inserted under " + target.id);
                     } else {
-                        updateRootAction("order", itemInMove, e.target);
+                        updateRootAction("order", itemInMove, target);
                         onChange && onChange(itemInMove.origin + " added as a sibling to " + target.id);
                     }
                 }

@@ -8,7 +8,7 @@ const App = (): JSX.Element => {
   const [treeMembers, setTreeMembers] = useState<dragList[] | null>(null);
 
   const fetchMembers = (): Promise<dragList[]> => {
-    const fetchedTreeMembers = TreeData;
+    const fetchedTreeMembers: dragList[] = TreeData;
     return Promise.resolve(fetchedTreeMembers);
   };
 
