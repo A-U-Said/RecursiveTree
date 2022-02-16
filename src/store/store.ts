@@ -8,7 +8,7 @@ declare global {
 }
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const store: Store<treeState, treeAction> = createStore(treeReducer, composeEnhancers());
+const store: Store<treeState, treeAction<any>> = createStore(treeReducer, composeEnhancers());
 
 export type IRootState = ReturnType<typeof treeReducer>;
 export default store;

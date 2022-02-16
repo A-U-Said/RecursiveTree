@@ -5,7 +5,7 @@ const INITIAL_STATE: treeState = {
     insertDestination: ""
 }
 
-const treeReducer = (state: treeState = INITIAL_STATE, action: treeAction): treeState => {
+const treeReducer = (state: treeState = INITIAL_STATE, action: treeAction<any>): treeState => {
   switch (action.type) {
     case SET_ITEM_IN_MOVE:
         return { ...state, movingItem: action.payload };

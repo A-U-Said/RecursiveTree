@@ -9,9 +9,9 @@ type treeState = {
   insertDestination: string;
 };
 
-type treeAction = {
+type treeAction<T> = {
   type: string;
-  payload: any;
+  payload: T;
 };
 
 type dragList = {
