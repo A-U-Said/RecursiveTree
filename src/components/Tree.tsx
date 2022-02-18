@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState, useRef, DragEvent } from 'react';
+import { Fragment, useEffect, useState, useRef, DragEvent, MutableRefObject } from 'react';
 import { Dispatch } from "redux"
 import { useSelector, useDispatch } from 'react-redux';
 import { setItemInMove, setInsertDestination } from '../store/actions'
@@ -10,10 +10,11 @@ type treeProps = {
     listId?: string;
     updateRoot?: (action: string, selectedItem: itemInMove, target: Element) => void;
     onChange?: (message: string) => void;
+    passedTimer?: MutableRefObject<NodeJS.Timeout | null>;
 };
 
 
-const Tree = ({members, listId='master-list', updateRoot, onChange} : treeProps): JSX.Element => {
+const Tree = ({members, listId='master-list', updateRoot, onChange, passedTimer} : treeProps): JSX.Element => {
 
 
     const [membersCopy, setMembersCopy] = useState<dragList[]>(members);
@@ -24,6 +25,7 @@ const Tree = ({members, listId='master-list', updateRoot, onChange} : treeProps)
     const insertDestination = useSelector<IRootState, string>((state) => state.insertDestination);
 
     const timer = useRef<NodeJS.Timeout | null>(null);
+    const masterTimer: NodeJS.Timeout | MutableRefObject<NodeJS.Timeout | null> = passedTimer || timer;
     const dispatch = useDispatch<Dispatch<any>>();
 
 
@@ -146,8 +148,8 @@ const Tree = ({members, listId='master-list', updateRoot, onChange} : treeProps)
         e.preventDefault();
         e.stopPropagation();
         const target: Element = e.target as Element;
-        clearTimeout(timer.current as NodeJS.Timeout);
-        timer.current = setTimeout(() => {
+        clearTimeout(masterTimer.current as NodeJS.Timeout);
+        masterTimer.current = setTimeout(() => {
             if (Object.keys(itemInMove).length !== 0 && itemInMove.origin !== target.id) {
                 setDropAction(true);
                 hasChildren(list) && setOpenState({...openState, [target.id]: true});
@@ -160,7 +162,8 @@ const Tree = ({members, listId='master-list', updateRoot, onChange} : treeProps)
     const dragleave = (e: DragEvent<HTMLLIElement>) => {
         e.preventDefault();
         e.stopPropagation();
-        clearTimeout(timer.current as NodeJS.Timeout);
+        clearTimeout(masterTimer.current as NodeJS.Timeout);
+        masterTimer.current = null;
         setDropAction(false);
         (insertDestination !== "") && dispatch(setInsertDestination(""));
     };
@@ -185,9 +188,8 @@ const Tree = ({members, listId='master-list', updateRoot, onChange} : treeProps)
                 }
             }
         }
-        clearTimeout(timer.current as NodeJS.Timeout);
+        clearTimeout(masterTimer.current as NodeJS.Timeout);
     }
-
 
     return (
         <ul id={listId} onDragOver={dragHandle}>
@@ -201,7 +203,7 @@ const Tree = ({members, listId='master-list', updateRoot, onChange} : treeProps)
                             onDrop={dropHandle}>
                                 {member.name}
                         </li>
-                    { openState[member.name] && hasChildren(member) && <Tree members={member.children!} listId={member.name+"-list"} updateRoot={updateRootAction} onChange={onChange}/> }
+                    { openState[member.name] && hasChildren(member) && <Tree members={member.children!} listId={member.name+"-list"} updateRoot={updateRootAction} onChange={onChange} passedTimer={masterTimer}/> }
                 </Fragment>
             )}
         </ul>
