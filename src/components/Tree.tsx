@@ -25,7 +25,7 @@ const Tree = ({members, listId='master-list', updateRoot, onChange, passedTimer}
     const insertDestination = useSelector<IRootState, string>((state) => state.insertDestination);
 
     const timer = useRef<NodeJS.Timeout | null>(null);
-    const masterTimer: NodeJS.Timeout | MutableRefObject<NodeJS.Timeout | null> = passedTimer || timer;
+    const masterTimer: MutableRefObject<NodeJS.Timeout | null> = passedTimer || timer;
     const dispatch = useDispatch<Dispatch<any>>();
 
 
