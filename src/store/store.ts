@@ -1,14 +1,14 @@
-import { createStore, Store, compose } from "redux";
+import { configureStore } from '@reduxjs/toolkit'
 import treeReducer from "./treeReducer";
 
-declare global {
-    interface Window {
-        __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
-    }
-}
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const store: Store<treeState, treeAction<any>> = createStore(treeReducer, composeEnhancers());
+const store = configureStore({
+    reducer: treeReducer,
+    devTools: true
+  });
 
-export type IRootState = ReturnType<typeof treeReducer>;
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+
 export default store;

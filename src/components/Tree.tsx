@@ -1,8 +1,8 @@
-import { Fragment, useEffect, useState, useRef, DragEvent, MutableRefObject } from 'react';
+import React, { Fragment, useEffect, useState, useRef, DragEvent, MutableRefObject } from 'react';
 import { Dispatch } from "redux"
 import { useSelector, useDispatch } from 'react-redux';
 import { setItemInMove, setInsertDestination } from '../store/actions'
-import { IRootState } from '../store/store';
+import { useAppSelector } from '../hooks/storeHooks';
 
 
 type treeProps = {
@@ -14,15 +14,14 @@ type treeProps = {
 };
 
 
-const Tree = ({members, listId='master-list', updateRoot, onChange, passedTimer} : treeProps): JSX.Element => {
-
+const Tree: React.FC<treeProps> = ({members, listId='master-list', updateRoot, onChange, passedTimer}) => {
 
     const [membersCopy, setMembersCopy] = useState<dragList[]>(members);
     const [openState, setOpenState] = useState<{[key:string]: boolean}>({});
     const [dropAction, setDropAction] = useState<boolean>(false);
 
-    const itemInMove = useSelector<IRootState, itemInMove>((state) => state.movingItem);
-    const insertDestination = useSelector<IRootState, string>((state) => state.insertDestination);
+    const itemInMove = useAppSelector(state => state.movingItem);
+    const insertDestination = useAppSelector(state => state.insertDestination);
 
     const timer = useRef<NodeJS.Timeout | null>(null);
     const masterTimer: MutableRefObject<NodeJS.Timeout | null> = passedTimer || timer;
@@ -193,19 +192,19 @@ const Tree = ({members, listId='master-list', updateRoot, onChange, passedTimer}
 
     return (
         <ul id={listId} onDragOver={dragHandle}>
-            { membersCopy.map((member: dragList, index: number) => 
+            { membersCopy.map((member: dragList, index: number) => (
                 <Fragment key={index}>
-                        <li draggable className={(insertDestination === member.name) ? "nested-title insert" : "nested-title"} id={member.name}
-                            onClick={() => expand(member.name)}
-                            onDragStart={(e) => dragStartHandle(e, member)}
-                            onDragEnter={(e) => dragenter(e, member)}
-                            onDragLeave={dragleave}
-                            onDrop={dropHandle}>
-                                {member.name}
-                        </li>
+                    <li draggable className={(insertDestination === member.name) ? "nested-title insert" : "nested-title"} id={member.name}
+                        onClick={() => expand(member.name)}
+                        onDragStart={(e) => dragStartHandle(e, member)}
+                        onDragEnter={(e) => dragenter(e, member)}
+                        onDragLeave={dragleave}
+                        onDrop={dropHandle}>
+                            {member.name}
+                    </li>
                     { openState[member.name] && hasChildren(member) && <Tree members={member.children!} listId={member.name+"-list"} updateRoot={updateRootAction} onChange={onChange} passedTimer={masterTimer}/> }
                 </Fragment>
-            )}
+            ))}
         </ul>
     )
 }

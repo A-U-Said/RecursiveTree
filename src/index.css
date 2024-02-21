@@ -2,8 +2,10 @@
   font-size: 20px;
   cursor: pointer;
   width: 100px;
-  background: lightgray;
+  background: #F5F5F5;
   margin: 5px;
+  padding: 4px;
+  border-radius: 2px;
 }
 
 .insert::after {
@@ -14,7 +16,6 @@
 }
 
 #master-list {
-  background-color: grey;
   width: 400px;
   padding-top: 10px;
   padding-bottom: 10px;
